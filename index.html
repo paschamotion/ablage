@@ -261,6 +261,17 @@ async function ensureDefaults() {
 const folderById = id => S.folders.find(f => f.id === id);
 const docById = id => S.docs.find(d => d.id === id);
 const isUnsorted = d => !d.folderId || !folderById(d.folderId);
+// Unterordner: jeder Ordner kann eine parentId haben (leer = Hauptebene)
+const parentOf = f => f && f.parentId && folderById(f.parentId) ? f.parentId : null;
+const childFolders = pid => S.folders.filter(f => parentOf(f) === (pid || null));
+function descendantIds(id) { const out = [id]; for (let i = 0; i < out.length; i++) childFolders(out[i]).forEach(c => out.push(c.id)); return out; }
+function folderPath(f) { const p = []; let x = f, n = 0; while (x && n++ < 30) { p.unshift(x); x = folderById(parentOf(x)); } return p; }
+const pathName = f => folderPath(f).map(x => x.name).join(' › ');
+function folderTree(pid = null, depth = 0, out = [], skip = null) {
+  childFolders(pid).forEach(f => { if (f.id === skip) return; out.push({f, depth}); folderTree(f.id, depth + 1, out, skip); });
+  return out;
+}
+function folderDocCount(id) { const ids = new Set(descendantIds(id)); return S.docs.filter(d => ids.has(d.folderId)).length; }
 function requestPersist() { try { navigator.storage?.persist?.(); } catch {} }
 
 /* ---------- Navigation ---------- */
@@ -321,13 +332,14 @@ function docRow(d, showFolder = true) {
   return `<button class="row" data-doc="${d.id}">${thumbHtml(d)}<div class="rc">
     <div class="t">${esc(d.title || 'Ohne Titel')}</div>
     <div class="s">${esc(sub || '–')}</div>
-    ${showFolder && f ? `<div class="s">${f.emoji} ${esc(f.name)}</div>` : ''}
+    ${showFolder && f ? `<div class="s">${f.emoji} ${esc(pathName(f))}</div>` : ''}
   </div>${dueBadge(d)}<span class="chev">›</span></button>`;
 }
-function folderTile(f, n) {
+function folderTile(f, n, subs = 0) {
+  if (n === undefined) { n = folderDocCount(f.id); subs = childFolders(f.id).length; }
   return `<button class="folder" data-folder="${f.id}">
     <div class="ico" style="background:${f.color}22">${f.emoji}</div>
-    <div class="name">${esc(f.name)}</div><div class="count">${n} ${n === 1 ? 'Dokument' : 'Dokumente'}</div></button>`;
+    <div class="name">${esc(f.name)}</div><div class="count">${n} ${n === 1 ? 'Dokument' : 'Dokumente'}${subs ? ` · ${subs} ${subs === 1 ? 'Unterordner' : 'Unterordner'}` : ''}</div></button>`;
 }
 const fab = ctx => `<div class="fabbar">
   <button class="fab" data-act="scan" data-ctx="${ctx || ''}">${ICON.camera} Scannen</button>
@@ -338,7 +350,7 @@ function searchDocs(q) {
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
   return S.docs.filter(d => {
     const f = folderById(d.folderId);
-    const hay = [d.title, d.sender, d.note, f?.name, fmtDate(d.date)].join(' ').toLowerCase();
+    const hay = [d.title, d.sender, d.note, f ? pathName(f) : '', fmtDate(d.date)].join(' ').toLowerCase();
     return words.every(w => hay.includes(w));
   }).sort(byDate);
 }
@@ -347,7 +359,6 @@ function searchDocs(q) {
 views.home = () => {
   const open = S.docs.filter(d => d.due && !d.done).sort((a, b) => a.due.localeCompare(b.due));
   const recent = [...S.docs].sort((a, b) => b.created - a.created).slice(0, 6);
-  const counts = {}; S.docs.forEach(d => { counts[d.folderId] = (counts[d.folderId] || 0) + 1; });
   const unsorted = S.docs.filter(isUnsorted).length;
   const showBanner = IS_IOS && !IS_STANDALONE && lsGet('ablage.banner', '') !== 'off';
   setView(`
@@ -361,7 +372,7 @@ views.home = () => {
       ${open.length ? `<div class="section-h"><span>Offene Fristen</span></div><div class="list">${open.slice(0, 5).map(d => docRow(d)).join('')}</div>` : ''}
       <div class="section-h"><span>Ordner</span><button class="link" data-act="newFolder">Neuer Ordner</button></div>
       <div class="grid">
-        ${S.folders.map(f => folderTile(f, counts[f.id] || 0)).join('')}
+        ${childFolders(null).map(f => folderTile(f)).join('')}
         ${unsorted ? folderTile({id: '_none', name: 'Ohne Ordner', emoji: '📂', color: '#8e8e93'}, unsorted) : ''}
       </div>
       ${recent.length ? `<div class="section-h"><span>Zuletzt hinzugefügt</span></div><div class="list">${recent.map(d => docRow(d)).join('')}</div>`
@@ -385,13 +396,19 @@ views.folder = ({id}) => {
   const f = id === '_none' ? {id: '_none', name: 'Ohne Ordner', emoji: '📂'} : folderById(id);
   if (!f) return back();
   const docs = S.docs.filter(d => id === '_none' ? isUnsorted(d) : d.folderId === id).sort(byDate);
+  const subs = id === '_none' ? [] : childFolders(id);
+  const parent = folderById(parentOf(f));
+  const newSub = id === '_none' ? '' : `<button class="link" data-act="newFolder" data-parent="${id}">Neuer Unterordner</button>`;
   setView(`
-  <header class="top"><button class="btn-text" data-act="back">${ICON.back}Ablage</button><h1></h1>
+  <header class="top"><button class="btn-text" data-act="back" style="max-width:40%;overflow:hidden;white-space:nowrap">${ICON.back}${esc(parent ? parent.name : 'Ablage')}</button><h1></h1>
     ${id !== '_none' ? `<button class="btn-text right" data-go="folderEdit" data-id="${id}">Bearbeiten</button>` : '<div style="min-width:84px"></div>'}</header>
   <h1 class="big-title">${f.emoji} ${esc(f.name)}</h1>
   <div class="wrap">
+    ${subs.length ? `<div class="section-h" style="margin-top:8px"><span>Unterordner</span>${newSub}</div>
+      <div class="grid">${subs.map(s => folderTile(s)).join('')}</div>` : ''}
+    <div class="section-h" ${subs.length ? '' : 'style="margin-top:8px"'}><span>Dokumente</span>${subs.length ? '' : newSub}</div>
     ${docs.length ? `<div class="list">${docs.map(d => docRow(d, false)).join('')}</div>`
-      : `<div class="empty"><div class="big">${f.emoji}</div>Dieser Ordner ist noch leer.</div>`}
+      : `<div class="empty"><div class="big">${f.emoji}</div>${subs.length ? 'Hier liegen keine Dokumente direkt.' : 'Dieser Ordner ist noch leer.'}</div>`}
   </div>
   ${fab(id === '_none' ? '' : id)}`);
 };
@@ -407,7 +424,7 @@ views.doc = async ({id}) => {
   <div class="wrap">
     <h1 style="font-size:26px;margin:4px 2px 14px;letter-spacing:-.4px;overflow-wrap:anywhere">${esc(d.title || 'Ohne Titel')}</h1>
     <div class="meta">
-      <div class="mrow"><span class="k">Ordner</span><span class="v">${f ? f.emoji + ' ' + esc(f.name) : 'Ohne Ordner'}</span></div>
+      <div class="mrow"><span class="k">Ordner</span><span class="v">${f ? f.emoji + ' ' + esc(pathName(f)) : 'Ohne Ordner'}</span></div>
       ${d.sender ? `<div class="mrow"><span class="k">Absender</span><span class="v">${esc(d.sender)}</span></div>` : ''}
       ${d.date ? `<div class="mrow"><span class="k">Briefdatum</span><span class="v">${fmtDate(d.date)}</span></div>` : ''}
       ${d.due ? `<div class="mrow"><span class="k">Frist</span><span class="v" style="display:flex;gap:10px;align-items:center;justify-content:flex-end">
@@ -440,8 +457,8 @@ views.doc = async ({id}) => {
 };
 
 function folderOptions(sel) {
-  return `<option value="">Ohne Ordner</option>` + S.folders.map(f =>
-    `<option value="${f.id}" ${f.id === sel ? 'selected' : ''}>${f.emoji} ${esc(f.name)}</option>`).join('') +
+  return `<option value="">Ohne Ordner</option>` + folderTree().map(({f}) =>
+    `<option value="${f.id}" ${f.id === sel ? 'selected' : ''}>${f.emoji} ${esc(pathName(f))}</option>`).join('') +
     `<option value="__new">＋ Neuer Ordner…</option>`;
 }
 views.docForm = ({mode, id}) => {
@@ -506,20 +523,23 @@ views.session = () => {
   </div>`);
 };
 
-views.folderEdit = ({id}) => {
-  const f = id ? folderById(id) : {name: '', emoji: '📁', color: COLORS[S.folders.length % COLORS.length]};
+views.folderEdit = ({id, parent}) => {
+  const f = id ? folderById(id) : {name: '', emoji: '📁', color: COLORS[S.folders.length % COLORS.length], parentId: parent || null};
   if (!f) return back();
-  const st = {emoji: f.emoji, color: f.color};
+  const st = {emoji: f.emoji, color: f.color, parentId: parentOf(f) || (id ? null : (folderById(parent) ? parent : null))};
+  const parentOpts = `<option value="">Hauptebene</option>` + folderTree(null, 0, [], id || null).map(({f: p}) =>
+    `<option value="${p.id}" ${p.id === st.parentId ? 'selected' : ''}>${p.emoji} ${esc(pathName(p))}</option>`).join('');
   setView(`
-  <header class="top"><button class="btn-text" data-act="back">Abbrechen</button><h1>${id ? 'Ordner bearbeiten' : 'Neuer Ordner'}</h1>
+  <header class="top"><button class="btn-text" data-act="back">Abbrechen</button><h1>${id ? 'Ordner bearbeiten' : st.parentId ? 'Neuer Unterordner' : 'Neuer Ordner'}</h1>
     <button class="btn-text right strong" data-act="saveFolder" data-id="${id || ''}">Speichern</button></header>
   <div class="wrap">
     <div style="display:grid;place-items:center;margin-top:10px"><div class="ico" id="fPrev" style="width:76px;height:76px;border-radius:22px;font-size:40px;background:${f.color}22">${f.emoji}</div></div>
-    <div class="fgroup"><label class="field"><span>Name</span><input id="fName" value="${esc(f.name)}" placeholder="z. B. Auto"></label></div>
+    <div class="fgroup"><label class="field"><span>Name</span><input id="fName" value="${esc(f.name)}" placeholder="z. B. Auto"></label>
+      <label class="field"><span>Liegt in</span><select id="fParent">${parentOpts}</select></label></div>
     <div class="fgroup"><div class="emojis">${EMOJIS.map(e => `<button type="button" data-emoji="${e}" class="${e === f.emoji ? 'on' : ''}">${e}</button>`).join('')}</div></div>
     <div class="fgroup"><div class="colors">${COLORS.map(c => `<button type="button" data-color="${c}" class="${c === f.color ? 'on' : ''}" style="background:${c}" aria-label="Farbe"></button>`).join('')}</div></div>
     ${id ? `<div class="btns"><button class="btn danger" data-act="delFolder" data-id="${id}">${ICON.trash} Ordner löschen</button></div>
-      <p class="hint" style="text-align:center">Dokumente darin bleiben erhalten und landen unter „Ohne Ordner“.</p>` : ''}
+      <p class="hint" style="text-align:center">Dokumente und Unterordner darin bleiben erhalten und rutschen eine Ebene nach oben.</p>` : ''}
   </div>`);
   app.addEventListener('click', function pick(e) {
     if (cur().view !== 'folderEdit') return app.removeEventListener('click', pick);
@@ -537,7 +557,7 @@ views.settings = () => {
   <header class="top"><button class="btn-text" data-act="back">${ICON.back}Ablage</button><h1>Einstellungen</h1><div style="min-width:84px"></div></header>
   <div class="wrap">
     <div class="section-h"><span>Ordner</span><button class="link" data-act="newFolder">Neu</button></div>
-    <div class="list">${S.folders.map(f => `<button class="row" data-go="folderEdit" data-id="${f.id}">
+    <div class="list">${folderTree().map(({f, depth}) => `<button class="row" data-go="folderEdit" data-id="${f.id}" style="padding-left:${14 + depth * 26}px">
       <div class="ico" style="background:${f.color}22;width:34px;height:34px;font-size:18px">${f.emoji}</div>
       <div class="rc"><div class="t" style="font-weight:500">${esc(f.name)}</div></div><span class="chev">›</span></button>`).join('') || '<div class="empty">Keine Ordner</div>'}</div>
 
@@ -963,7 +983,7 @@ backupIn.addEventListener('change', async () => {
 const actions = {
   back,
   hideBanner() { lsSet('ablage.banner', 'off'); render(); },
-  newFolder() { go('folderEdit', {}); },
+  newFolder(t) { go('folderEdit', {parent: t.dataset.parent || ''}); },
   scan(t) { startSession({folderId: t.dataset.ctx || ''}); cam.click(); },
   importMenu(t) {
     const ctx = t.dataset.ctx || '';
@@ -1044,16 +1064,20 @@ const actions = {
   async saveFolder(t) {
     const name = $('#fName').value.trim(); if (!name) return toast('Bitte einen Namen eingeben');
     const st = views.folderEdit.state, id = t.dataset.id;
+    const pv = $('#fParent').value || null;
+    st.parentId = pv && folderById(pv) && !(id && descendantIds(id).includes(pv)) ? pv : null;
     if (id) { const f = folderById(id); Object.assign(f, {name, ...st}); await dbPut('folders', f); }
     else { const f = {id: uid(), name, ...st, order: S.folders.length}; await dbPut('folders', f); S.folders.push(f); }
     back();
   },
   delFolder(t) {
-    const f = folderById(t.dataset.id);
-    confirmSheet(`Ordner „${f.name}“ löschen?`, 'Ordner löschen', async () => {
-      for (const d of S.docs.filter(x => x.folderId === f.id)) { d.folderId = null; await dbPut('docs', d); }
+    const f = folderById(t.dataset.id), up = parentOf(f);
+    const subs = childFolders(f.id).length;
+    confirmSheet(`Ordner „${f.name}“ löschen?${subs ? ` Die ${subs} Unterordner bleiben erhalten.` : ''}`, 'Ordner löschen', async () => {
+      for (const d of S.docs.filter(x => x.folderId === f.id)) { d.folderId = up; await dbPut('docs', d); }
+      for (const c of childFolders(f.id)) { c.parentId = up; await dbPut('folders', c); }
       await dbDel('folders', f.id); S.folders = S.folders.filter(x => x !== f);
-      stack.pop(); if (cur().view === 'folder') stack.pop(); render(true);
+      stack.pop(); if (cur().view === 'folder' && cur().params.id === f.id) stack.pop(); render(true);
     });
   },
   async exportPdfs() {
@@ -1061,7 +1085,7 @@ const actions = {
     toast('PDFs werden erstellt…');
     const files = [], used = new Set(), enc = new TextEncoder();
     for (const d of S.docs) {
-      const f = folderById(d.folderId), dir = safeName(f ? f.name : 'Ohne Ordner');
+      const f = folderById(d.folderId), dir = f ? folderPath(f).map(x => safeName(x.name)).join('/') : 'Ohne Ordner';
       files.push({name: uniquePath(used, `Ablage/${dir}/${pdfName(d)}`), data: new Uint8Array(await (await docPdf(d)).arrayBuffer())});
     }
     await offerFile(new File([makeZip(files)], `Ablage PDFs ${localISO()}.zip`, {type: 'application/zip'}), 'Export');
