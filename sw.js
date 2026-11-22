@@ -1,5 +1,5 @@
 // Offline-Unterstützung: App-Dateien zwischenspeichern, im Hintergrund aktualisieren.
-const CACHE = 'ablage-v2';
+const CACHE = 'ablage-v3';
 const FONTS = 'ablage-fonts';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png'];
 

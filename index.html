@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
-<link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" href="icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png?v=2">
+<link rel="icon" href="icon-180.png?v=2">
 <link rel="manifest" href="manifest.webmanifest">
 <title>Ablage</title>
 <style>
@@ -116,6 +116,30 @@ svg.i.empty-i{width:46px;height:46px;stroke-width:1.4;color:var(--muted)}
 .qa button.on .c{background:#fff;color:#141018;border-color:#fff}
 .qa button:active .c{transform:scale(.95)}
 
+/* Backup-Seite */
+.bk-hero{display:flex;gap:14px;align-items:center;padding:18px;border-radius:24px;border:1px solid var(--line);background:var(--card)}
+.bk-hero b{display:block;font-size:18px;font-weight:500}
+.bk-hero small{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.bk-big{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex:none;background:rgba(75,227,155,.15);color:var(--ok)}
+.bk-big svg{width:27px;height:27px}
+.bk-hero.bk-pending .bk-big{background:rgba(139,92,255,.22);color:#c9b3ff}
+.bk-hero.bk-never{border-color:rgba(255,192,105,.4);background:linear-gradient(135deg,rgba(255,192,105,.12),rgba(255,255,255,.04))}
+.bk-hero.bk-never .bk-big{background:rgba(255,192,105,.18);color:#ffc069;animation:bkShimmer 2.2s ease-in-out infinite}
+.bk-hero.bk-old{border-color:rgba(255,107,129,.45);background:linear-gradient(135deg,rgba(255,107,129,.14),rgba(255,255,255,.04))}
+.bk-hero.bk-old .bk-big{background:rgba(255,107,129,.18);color:#ff6b81}
+.bk-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.bk-stat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 8px;text-align:center}
+.bk-stat .n{display:block;font-size:30px;font-weight:500;line-height:1.1}
+.bk-stat .l{color:var(--muted);font-size:13px}
+.bk-stat.warn .n{color:var(--warn)}
+.bk-bar{height:8px;border-radius:99px;background:var(--chip);margin-top:16px;overflow:hidden}
+.bk-bar i{display:block;height:100%;background:var(--grad);border-radius:99px;transition:width .4s}
+.meta .mrow .v b{font-weight:500;color:var(--text)}
+/* Backup-Knopf in der Leiste: gelb schimmernd = noch nie gesichert, rot = älter als 1 Monat */
+.nav button.bk-never{color:#ffc069;border-color:rgba(255,192,105,.55);background:rgba(48,36,14,.82);animation:bkShimmer 2.2s ease-in-out infinite}
+.nav button.bk-old{color:#ff6b81;border-color:rgba(255,107,129,.6);background:rgba(58,16,26,.85);box-shadow:0 0 14px rgba(255,77,109,.45),0 4px 14px rgba(0,0,0,.35)}
+@keyframes bkShimmer{0%,100%{box-shadow:0 0 0 0 rgba(255,192,105,0),0 4px 14px rgba(0,0,0,.35)}50%{box-shadow:0 0 18px 4px rgba(255,192,105,.55),0 4px 14px rgba(0,0,0,.35)}}
+@media (prefers-reduced-motion:reduce){.nav button.bk-never{animation:none;box-shadow:0 0 14px rgba(255,192,105,.5)}}
 .search{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:0 16px;height:48px;color:var(--muted);margin-top:18px}
 .search svg{width:19px;height:19px}
 .search input{flex:1;border:0;background:none;font:inherit;font-size:16px;color:var(--text);outline:none;min-width:0}
@@ -124,6 +148,19 @@ svg.i.empty-i{width:46px;height:46px;stroke-width:1.4;color:var(--muted)}
 .section-h{display:flex;justify-content:space-between;align-items:baseline;font-size:20px;font-weight:500;color:var(--text);margin:28px 2px 12px}
 .link{background:none;border:0;color:var(--muted);font-size:14px;padding:0}
 
+.sh-r{display:flex;align-items:center;gap:10px}
+.add-btn{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 13px 0 9px;border-radius:999px;border:1px solid rgba(230,191,255,.35);
+  background:linear-gradient(135deg,rgba(139,92,255,.32),rgba(217,70,143,.28));color:#fff;font-size:14px;font-weight:500;white-space:nowrap}
+.add-btn svg{width:17px;height:17px;stroke-width:2.2}
+.add-btn:active{transform:scale(.96)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.chips button{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 11px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:14px}
+.chips button svg{width:16px;height:16px}
+.chips button.on{background:#fff;color:#141018;border-color:#fff}
+.seg{display:inline-flex;padding:3px;gap:2px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{width:34px;height:28px;border:0;border-radius:999px;background:none;color:var(--muted);display:grid;place-items:center;padding:0}
+.seg button svg{width:16px;height:16px}
+.seg button.on{background:#fff;color:#141018}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .folder{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px;text-align:left;min-height:110px;display:flex;flex-direction:column;
@@ -150,13 +187,18 @@ svg.i.empty-i{width:46px;height:46px;stroke-width:1.4;color:var(--muted)}
 .empty .big{font-size:44px;margin-bottom:8px}
 
 /* Leiste unten */
-.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));z-index:6;display:flex;gap:8px;align-items:center;
-  padding:7px;border-radius:999px;background:rgba(22,16,28,.72);border:1px solid var(--line);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
-  box-shadow:0 12px 40px rgba(0,0,0,.55)}
-.nav button{width:52px;height:52px;border-radius:50%;border:0;background:rgba(255,255,255,.07);color:var(--text);display:grid;place-items:center;position:relative}
-.nav button.on{background:rgba(255,255,255,.2)}
-.nav .scan{width:62px;height:62px;background:var(--grad);box-shadow:0 8px 26px rgba(201,70,160,.5)}
-.nav .scan svg{width:26px;height:26px}
+.nav-fade{position:fixed;left:0;right:0;bottom:0;height:calc(150px + env(safe-area-inset-bottom));z-index:5;pointer-events:none;
+  background:linear-gradient(to top,rgba(8,6,12,.92) 0%,rgba(8,6,12,.6) 45%,rgba(8,6,12,0) 100%);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  -webkit-mask-image:linear-gradient(to top,#000 0%,#000 40%,transparent 100%);mask-image:linear-gradient(to top,#000 0%,#000 40%,transparent 100%)}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));z-index:6;display:flex;gap:14px;align-items:center}
+.nav button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(26,19,32,.78);color:rgba(246,243,248,.75);display:grid;place-items:center;position:relative;
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.nav button svg{width:19px;height:19px}
+.nav button.on{background:rgba(255,255,255,.9);color:#141018;border-color:transparent}
+.nav button .dot{top:8px;right:9px}
+.nav .scan{width:64px;height:64px;border:0;color:#fff;background:var(--grad);box-shadow:0 10px 28px rgba(201,70,160,.5);margin:0 4px}
+.nav .scan svg{width:27px;height:27px}
 .nav button:active{transform:scale(.94)}
 
 .banner{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;margin-top:14px;font-size:14px;color:var(--muted)}
@@ -271,7 +313,7 @@ svg.i.empty-i{width:46px;height:46px;stroke-width:1.4;color:var(--muted)}
 <script>
 'use strict';
 // Bei jeder neuen Version erhöhen – daran erkennt die App, dass es ein Update gibt.
-const APP_VERSION = '2026.11.22-5';
+const APP_VERSION = '2026.11.22-11';
 /* ---------- Helfer ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -289,6 +331,14 @@ const IS_STANDALONE = navigator.standalone === true || matchMedia('(display-mode
 
 // Lucide-Icons (lucide-static 0.460.0, ISC-Lizenz), identisch mit lucide-react
 const LUCIDE = {
+  'download': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" />',
+  'hard-drive': '<line x1="22" x2="2" y1="12" y2="12" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /><line x1="6" x2="6.01" y1="16" y2="16" /><line x1="10" x2="10.01" y1="16" y2="16" />',
+  'contact': '<path d="M16 2v2" /><path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" /><path d="M8 2v2" /><circle cx="12" cy="11" r="3" /><rect x="3" y="4" width="18" height="18" rx="2" />',
+  'file-pen-line': '<path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" /><path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /><path d="M8 18h1" />',
+  'shopping-bag': '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" />',
+  'credit-card': '<rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" />',
+  'layout-grid': '<rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" />',
+  'list': '<path d="M3 12h.01" /><path d="M3 18h.01" /><path d="M3 6h.01" /><path d="M8 12h13" /><path d="M8 18h13" /><path d="M8 6h13" />',
   'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />',
   'settings': '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" />',
   'search': '<circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />',
@@ -359,7 +409,10 @@ const LOGO = lucide('file-text', 'i logo');
 // Großes Icon für leere Ansichten
 const emptyIcon = name => `<div class="big">${lucide(name, 'i empty-i')}</div>`;
 // Ordner-Symbole (Auswahl im Ordner-Editor)
-const FOLDER_ICONS = ['folder','receipt','wallet','shield-check','landmark','heart-pulse','house','briefcase','package','car','smartphone','zap',
+// Vorschläge für neue Bereiche auf der Startseite
+const AREA_SUGGEST = [['Belege', 'receipt', '#4be39b'], ['Visitenkarten', 'contact', '#6ea8ff'], ['Verträge', 'file-pen-line', '#a98bff'],
+  ['Garantien', 'shield-check', '#ffc069'], ['Kassenbons', 'shopping-bag', '#ff7a8a'], ['Karten', 'credit-card', '#5fd4e0']];
+const FOLDER_ICONS = ['mail','contact','file-pen-line','shopping-bag','credit-card','folder','receipt','wallet','shield-check','landmark','heart-pulse','house','briefcase','package','car','smartphone','zap',
   'graduation-cap','baby','paw-print','plane','scale','euro','trending-up','gift','wrench','dumbbell','book-open','heart'];
 // Frühere Emoji-Ordner automatisch auf Lucide umstellen
 const EMOJI_TO_ICON = {'📁':'folder','🧾':'receipt','🏦':'wallet','🛡️':'shield-check','🏛️':'landmark','🩺':'heart-pulse','🏠':'house','💼':'briefcase',
@@ -417,12 +470,27 @@ async function loadAll() {
     delete f.emoji;
     await dbPut('folders', f);
   }
+  // Umstellung auf Bereiche (einmalig): alle bisherigen Hauptordner wandern in den Bereich „Briefe“
+  const meta = (await dbGet('blobs', '__meta')) || {id: '__meta'};
+  if (!meta.areas) {
+    const tops = S.folders.filter(f => !f.parentId || !S.folders.some(x => x.id === f.parentId));
+    if (tops.length) {
+      const area = {id: uid(), name: 'Briefe', icon: 'mail', color: '#f08bd0', order: -1};
+      await dbPut('folders', area);
+      for (const f of tops) { f.parentId = area.id; await dbPut('folders', f); }
+      S.folders.unshift(area);
+    }
+    meta.areas = true; await dbPut('blobs', meta);
+  }
+  S.meta = meta;
 }
 async function ensureDefaults() {
   if (S.folders.length || S.docs.length || lsGet('ablage.init', '') === '1') return;
+  const area = {id: uid(), name: 'Briefe', icon: 'mail', color: '#f08bd0', order: 0};
+  await dbPut('folders', area);
   for (let i = 0; i < DEFAULT_FOLDERS.length; i++) {
     const [icon, name, color] = DEFAULT_FOLDERS[i];
-    await dbPut('folders', {id: uid(), name, icon, color, order: i});
+    await dbPut('folders', {id: uid(), name, icon, color, order: i + 1, parentId: area.id});
   }
   lsSet('ablage.init', '1');
   await loadAll();
@@ -504,21 +572,48 @@ function docRow(d, showFolder = true) {
     ${showFolder && f ? `<div class="s">${folderIconInline(f)} ${esc(pathName(f))}</div>` : ''}
   </div>${dueBadge(d)}${ICON.chev}</button>`;
 }
+// Ordner-Ansicht: 'grid' (Raster) oder 'list' (Spalte), wird gemerkt
+const folderView = () => lsGet('ablage.folderView', 'grid') === 'list' ? 'list' : 'grid';
+const viewToggle = () => `<span class="seg" role="group" aria-label="Ansicht">
+  <button class="${folderView() === 'grid' ? 'on' : ''}" data-act="setFolderView" data-v="grid" aria-label="Rasteransicht">${lucide('layout-grid')}</button>
+  <button class="${folderView() === 'list' ? 'on' : ''}" data-act="setFolderView" data-v="list" aria-label="Listenansicht">${lucide('list')}</button></span>`;
+function folderRow(f, n, subs = 0) {
+  if (n === undefined) { n = folderDocCount(f.id); subs = childFolders(f.id).length; }
+  return `<button class="row" data-folder="${f.id}">${folderIcon(f, 40)}<div class="rc">
+    <div class="t">${esc(f.name)}</div>
+    <div class="s">${n} ${n === 1 ? 'Dokument' : 'Dokumente'}${subs ? ` · ${subs} Ordner` : ''}</div></div>${ICON.chev}</button>`;
+}
+// Ordnerliste im gewählten Stil; "extra" = zusätzliche Einträge wie „Ohne Ordner“ [{f, n}]
+function folderCollection(folders, extra = []) {
+  const list = folderView() === 'list';
+  const items = folders.map(f => list ? folderRow(f) : folderTile(f)).concat(extra.map(e => list ? folderRow(e.f, e.n) : folderTile(e.f, e.n)));
+  return `<div class="${list ? 'list' : 'grid'}">${items.join('')}</div>`;
+}
 function folderTile(f, n, subs = 0) {
   if (n === undefined) { n = folderDocCount(f.id); subs = childFolders(f.id).length; }
   return `<button class="folder" data-folder="${f.id}">
     ${folderIcon(f)}
-    <div class="name">${esc(f.name)}</div><div class="count">${n} ${n === 1 ? 'Dokument' : 'Dokumente'}${subs ? ` · ${subs} ${subs === 1 ? 'Unterordner' : 'Unterordner'}` : ''}</div></button>`;
+    <div class="name">${esc(f.name)}</div><div class="count">${n} ${n === 1 ? 'Dokument' : 'Dokumente'}${subs ? ` · ${subs} Ordner` : ''}</div></button>`;
 }
 const hasLateDue = () => S.docs.some(d => d.due && !d.done && d.due <= localISO());
 function bottomNav(active, ctx = '') {
-  return `<nav class="nav">
+  return `<div class="nav-fade"></div><nav class="nav">
     <button data-act="navHome" class="${active === 'home' ? 'on' : ''}" aria-label="Start">${ICON.home}</button>
     <button data-act="navDeadlines" class="${active === 'deadlines' ? 'on' : ''}" aria-label="Fristen">${ICON.bell}${hasLateDue() ? '<span class="dot"></span>' : ''}</button>
     <button class="scan" data-act="scan" data-ctx="${ctx}" aria-label="Scannen">${ICON.camera}</button>
     <button data-act="importMenu" data-ctx="${ctx}" aria-label="Importieren">${ICON.plus}</button>
-    <button data-act="newFolder" data-parent="${ctx}" aria-label="${ctx ? 'Neuer Unterordner' : 'Neuer Ordner'}">${ICON.folderPlus}</button>
+    <button data-act="navBackup" class="bk-${backupState()}${active === 'backup' ? ' on' : ''}" aria-label="${backupLabel()}" title="${backupLabel()}">${ICON.cloud}</button>
   </nav>`;
+}
+// Backup-Zustand: 'never' (noch nie, gelb schimmernd), 'old' (älter als 1 Monat, rot) oder 'ok'
+function backupState() {
+  const last = S.meta?.lastBackup;
+  if (!last) return 'never';
+  return Date.now() - last > 30 * 864e5 ? 'old' : 'ok';
+}
+function backupLabel() {
+  const last = S.meta?.lastBackup;
+  return !last ? 'Backup erstellen – noch nie gesichert' : `Backup erstellen – zuletzt am ${new Date(last).toLocaleDateString('de-DE')}`;
 }
 function greeting() { const h = new Date().getHours(); return h < 11 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend'; }
 function updateCard() {
@@ -566,21 +661,12 @@ views.home = () => {
       <button class="mini" data-act="navDeadlines"><span class="k">FRISTEN</span><span class="n">${open.length}</span>
         <span class="s">${open.length ? (late ? `${late} fällig oder überfällig` : 'offen') : 'alles erledigt'}</span></button>
     </div>
-    <div class="qa">
-      <button class="on" data-act="scan" data-ctx=""><span class="c">${ICON.camera}</span>Scannen</button>
-      <button data-act="importPhotos"><span class="c">${ICON.photo}</span>Fotos</button>
-      <button data-act="importPdf"><span class="c">${ICON.file}</span>PDF</button>
-      <button data-act="backup"><span class="c">${ICON.cloud}</span>Backup</button>
-    </div>
     <label class="search">${ICON.search}<input id="q" type="search" placeholder="Titel, Absender, Notiz suchen" value="${esc(S.q)}" autocomplete="off" enterkeyhint="search"></label>
     <div id="results"></div>
     <div id="homeMain">
       ${open.length ? `<div class="section-h"><span>Offene Fristen</span><button class="link" data-act="navDeadlines">Alle ${ICON.chevS}</button></div><div class="list">${open.slice(0, 3).map(d => docRow(d)).join('')}</div>` : ''}
-      <div class="section-h"><span>Ordner</span><button class="link" data-act="newFolder">Neuer Ordner ${ICON.chevS}</button></div>
-      <div class="grid">
-        ${childFolders(null).map(f => folderTile(f)).join('')}
-        ${unsorted ? folderTile({id: '_none', name: 'Ohne Ordner', icon: 'folder-open', color: '#b9b3c4'}, unsorted) : ''}
-      </div>
+      <div class="section-h"><span>Bereiche</span><span class="sh-r">${viewToggle()}<button class="add-btn" data-act="newFolder">${ICON.plus}Neu</button></span></div>
+      ${folderCollection(childFolders(null), unsorted ? [{f: {id: '_none', name: 'Ohne Ordner', icon: 'folder-open', color: '#b9b3c4'}, n: unsorted}] : [])}
       ${recent.length ? `<div class="section-h"><span>Zuletzt hinzugefügt</span></div><div class="list">${recent.map(d => docRow(d)).join('')}</div>`
         : `<div class="empty">${emptyIcon('mail')}Noch keine Dokumente.<br>Tippe auf <b>Scannen</b>, um deinen ersten Brief abzufotografieren.</div>`}
     </div>
@@ -604,14 +690,14 @@ views.folder = ({id}) => {
   const docs = S.docs.filter(d => id === '_none' ? isUnsorted(d) : d.folderId === id).sort(byDate);
   const subs = id === '_none' ? [] : childFolders(id);
   const parent = folderById(parentOf(f));
-  const newSub = id === '_none' ? '' : `<button class="link" data-act="newFolder" data-parent="${id}">Neuer Unterordner</button>`;
+  const newSub = id === '_none' ? '' : `<button class="add-btn" data-act="newFolder" data-parent="${id}">${ICON.plus}Ordner</button>`;
   setView(`
   <header class="top"><button class="btn-text" data-act="back" style="max-width:40%;overflow:hidden;white-space:nowrap">${ICON.back}${esc(parent ? parent.name : 'Ablage')}</button><h1></h1>
     ${id !== '_none' ? `<button class="btn-text right" data-go="folderEdit" data-id="${id}">Bearbeiten</button>` : '<div style="min-width:84px"></div>'}</header>
   <h1 class="big-title title-ico">${folderIcon(f, 46)}<span>${esc(f.name)}</span></h1>
   <div class="wrap">
-    ${subs.length ? `<div class="section-h" style="margin-top:8px"><span>Unterordner</span>${newSub}</div>
-      <div class="grid">${subs.map(s => folderTile(s)).join('')}</div>` : ''}
+    ${subs.length ? `<div class="section-h" style="margin-top:8px"><span>Ordner</span><span class="sh-r">${viewToggle()}${newSub}</span></div>
+      ${folderCollection(subs)}` : ''}
     <div class="section-h" ${subs.length ? '' : 'style="margin-top:8px"'}><span>Dokumente</span>${subs.length ? '' : newSub}</div>
     ${docs.length ? `<div class="list">${docs.map(d => docRow(d, false)).join('')}</div>`
       : `<div class="empty">${emptyIcon(f.icon || 'folder')}${subs.length ? 'Hier liegen keine Dokumente direkt.' : 'Dieser Ordner ist noch leer.'}</div>`}
@@ -663,6 +749,51 @@ async function saveProfileData(name, photo) {
   await dbPut('blobs', S.profile);
   pfDraft = null;
 }
+
+/* Backup-Seite: Status, gesicherte / ungesicherte Dokumente, Erstellen, Importieren, Export */
+const isUnsaved = d => !S.meta?.lastBackup || (d.updated || d.created) > S.meta.lastBackup;
+views.backup = () => {
+  const st = backupState(), last = S.meta?.lastBackup, total = S.docs.length;
+  const unsaved = S.docs.filter(isUnsaved).sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
+  const saved = total - unsaved.length, pct = total ? Math.round(saved / total * 100) : (last ? 100 : 0);
+  const when = last ? `${new Date(last).toLocaleDateString('de-DE')} um ${new Date(last).toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr` : '';
+  const title = st === 'never' ? 'Noch nie gesichert' : st === 'old' ? 'Backup ist veraltet' : unsaved.length ? 'Neue Dokumente seit dem Backup' : 'Alles gesichert';
+  const sub = st === 'never' ? 'Sichere deine Dokumente, damit nichts verloren geht.' : `Letztes Backup am ${when}${st === 'old' ? ' – älter als einen Monat' : ''}`;
+  const heroIcon = st === 'ok' && !unsaved.length ? 'circle-check' : st === 'ok' ? 'cloud-upload' : 'triangle-alert';
+  setView(`
+  <header class="top"><button class="btn-text" data-act="back">${ICON.back}Zurück</button><h1></h1><div style="min-width:84px"></div></header>
+  <h1 class="big-title">Backup</h1>
+  <div class="wrap">
+    <div class="bk-hero bk-${st}${st === 'ok' && unsaved.length ? ' bk-pending' : ''}">
+      <div class="bk-big">${lucide(heroIcon)}</div>
+      <div class="rc"><b>${title}</b><small>${sub}</small></div>
+    </div>
+    <div class="bk-stats">
+      <div class="bk-stat"><span class="n">${saved}</span><span class="l">gesichert</span></div>
+      <div class="bk-stat${unsaved.length ? ' warn' : ''}"><span class="n">${unsaved.length}</span><span class="l">ungesichert</span></div>
+      <div class="bk-stat"><span class="n">${total}</span><span class="l">gesamt</span></div>
+    </div>
+    <div class="bk-bar"><i style="width:${pct}%"></i></div>
+    <p class="hint">${total ? `${pct} % deiner Dokumente sind im letzten Backup enthalten.` : 'Noch keine Dokumente vorhanden.'}${S.meta?.lastBackupCount != null ? ` Im letzten Backup: ${S.meta.lastBackupCount} ${S.meta.lastBackupCount === 1 ? 'Dokument' : 'Dokumente'}.` : ''}</p>
+    <div class="btns">
+      <button class="btn primary" data-act="backup">${ICON.cloud} Backup jetzt erstellen</button>
+      <button class="btn" data-act="restore">${lucide('download')} Backup importieren</button>
+      <button class="btn" data-act="exportPdfs">${ICON.file} Alle PDFs exportieren</button>
+    </div>
+    ${unsaved.length ? `<div class="section-h"><span>Noch nicht gesichert</span></div>
+      <div class="list">${unsaved.slice(0, 8).map(d => docRow(d)).join('')}</div>
+      ${unsaved.length > 8 ? `<p class="hint" style="text-align:center">und ${unsaved.length - 8} weitere</p>` : ''}` : ''}
+    <div class="section-h"><span>So funktioniert's</span></div>
+    <div class="meta">
+      <div class="mrow"><span class="k">1</span><span class="v">Tippe auf <b>Backup jetzt erstellen</b>.</span></div>
+      <div class="mrow"><span class="k">2</span><span class="v">Wähle im Teilen-Menü <b>In „Dateien“ sichern</b> und dort <b>iCloud Drive</b>.</span></div>
+      <div class="mrow"><span class="k">3</span><span class="v">Neues iPhone oder App neu installiert? <b>Backup importieren</b> holt alles zurück.</span></div>
+      <div class="mrow"><span class="k">${lucide('hard-drive', 'i sm')}</span><span class="v" id="bkUsed">Belegter Speicher wird berechnet…</span></div>
+    </div>
+  </div>
+  ${bottomNav('backup')}`);
+  navigator.storage?.estimate?.().then(e => { const el = $('#bkUsed'); if (el) el.textContent = `Belegter Speicher: ${fmtSize(e.usage || 0)}`; }).catch(() => {});
+};
 
 views.deadlines = () => {
   const open = S.docs.filter(d => d.due && !d.done).sort((a, b) => a.due.localeCompare(b.due));
@@ -792,14 +923,16 @@ views.folderEdit = ({id, parent}) => {
   const f = id ? folderById(id) : {name: '', icon: 'folder', color: COLORS[S.folders.length % COLORS.length], parentId: parent || null};
   if (!f) return back();
   const st = {icon: f.icon || 'folder', color: f.color, parentId: parentOf(f) || (id ? null : (folderById(parent) ? parent : null))};
-  const parentOpts = `<option value="">Hauptebene</option>` + folderTree(null, 0, [], id || null).map(({f: p}) =>
+  const parentOpts = `<option value="">Startseite (als Bereich)</option>` + folderTree(null, 0, [], id || null).map(({f: p}) =>
     `<option value="${p.id}" ${p.id === st.parentId ? 'selected' : ''}>${esc(pathName(p))}</option>`).join('');
+  const isArea = !st.parentId;
   setView(`
-  <header class="top"><button class="btn-text" data-act="back">Abbrechen</button><h1>${id ? 'Ordner bearbeiten' : st.parentId ? 'Neuer Unterordner' : 'Neuer Ordner'}</h1>
+  <header class="top"><button class="btn-text" data-act="back">Abbrechen</button><h1>${id ? (isArea ? 'Bereich bearbeiten' : 'Ordner bearbeiten') : (isArea ? 'Neuer Bereich' : 'Neuer Ordner')}</h1>
     <button class="btn-text right strong" data-act="saveFolder" data-id="${id || ''}">Speichern</button></header>
   <div class="wrap">
     <div style="display:grid;place-items:center;margin-top:10px"><div id="fPrev">${folderIcon({icon: st.icon, color: st.color}, 80)}</div></div>
-    <div class="fgroup"><label class="field"><span>Name</span><input id="fName" value="${esc(f.name)}" placeholder="z. B. Auto"></label>
+    ${!id && isArea ? `<div class="chips">${AREA_SUGGEST.map(([n, i, c]) => `<button type="button" data-suggest="${n}" data-sicon="${i}" data-scolor="${c}">${lucide(i)}${n}</button>`).join('')}</div>` : ''}
+    <div class="fgroup"><label class="field"><span>Name</span><input id="fName" value="${esc(f.name)}" placeholder="${isArea ? 'z. B. Belege' : 'z. B. Auto'}"></label>
       <label class="field"><span>Liegt in</span><select id="fParent">${parentOpts}</select></label></div>
     <div class="fgroup"><div class="emojis">${FOLDER_ICONS.map(n => `<button type="button" data-icon="${n}" class="${n === st.icon ? 'on' : ''}" aria-label="${n}">${lucide(n)}</button>`).join('')}</div></div>
     <div class="fgroup"><div class="colors">${COLORS.map(c => `<button type="button" data-color="${c}" class="${c === f.color ? 'on' : ''}" style="background:${c}" aria-label="Farbe"></button>`).join('')}</div></div>
@@ -808,7 +941,13 @@ views.folderEdit = ({id, parent}) => {
   </div>`);
   app.addEventListener('click', function pick(e) {
     if (cur().view !== 'folderEdit') return app.removeEventListener('click', pick);
-    const b = e.target.closest('[data-icon],[data-color]'); if (!b) return;
+    const b = e.target.closest('[data-icon],[data-color],[data-suggest]'); if (!b) return;
+    if (b.dataset.suggest) {
+      $('#fName').value = b.dataset.suggest; st.icon = b.dataset.sicon; st.color = b.dataset.scolor;
+      app.querySelectorAll('[data-icon]').forEach(x => x.classList.toggle('on', x.dataset.icon === st.icon));
+      app.querySelectorAll('[data-color]').forEach(x => x.classList.toggle('on', x.dataset.color === st.color));
+      app.querySelectorAll('[data-suggest]').forEach(x => x.classList.toggle('on', x === b));
+    }
     if (b.dataset.icon) { st.icon = b.dataset.icon; app.querySelectorAll('[data-icon]').forEach(x => x.classList.toggle('on', x === b)); }
     if (b.dataset.color) { st.color = b.dataset.color; app.querySelectorAll('[data-color]').forEach(x => x.classList.toggle('on', x === b)); }
     $('#fPrev').innerHTML = folderIcon({icon: st.icon, color: st.color}, 80);
@@ -826,7 +965,7 @@ views.settings = () => {
       <span class="avatar" style="width:46px;height:46px">${S.profile?.photo ? `<img src="${S.profile.photo}" alt="">` : LOGO}</span>
       <div class="rc"><div class="t">${esc(S.profile?.name || 'Kein Name')}</div><div class="s">Name und Profilbild ändern</div></div>${ICON.chev}</button></div>
     ${updateCard()}
-    <div class="section-h"><span>Ordner</span><button class="link" data-act="newFolder">Neu ${ICON.chevS}</button></div>
+    <div class="section-h"><span>Bereiche & Ordner</span><button class="add-btn" data-act="newFolder">${ICON.plus}Neu</button></div>
     <div class="list">${folderTree().map(({f, depth}) => `<button class="row" data-go="folderEdit" data-id="${f.id}" style="padding-left:${14 + depth * 26}px">
       ${folderIcon(f, 36)}
       <div class="rc"><div class="t" style="font-weight:500">${esc(f.name)}</div></div>${ICON.chev}</button>`).join('') || '<div class="empty">Keine Ordner</div>'}</div>
@@ -834,8 +973,7 @@ views.settings = () => {
     <div class="section-h"><span>Sichern & Exportieren</span></div>
     <div class="list">
       <button class="row" data-act="exportPdfs"><div class="rc"><div class="t" style="font-weight:500">Alle PDFs exportieren</div><div class="s">ZIP mit einem Ordner je Kategorie</div></div>${ICON.chev}</button>
-      <button class="row" data-act="backup"><div class="rc"><div class="t" style="font-weight:500">Backup erstellen</div><div class="s">Alles inkl. Notizen & Fristen</div></div>${ICON.chev}</button>
-      <button class="row" data-act="restore"><div class="rc"><div class="t" style="font-weight:500">Backup wiederherstellen</div><div class="s">Fügt Daten aus einer Backup-ZIP hinzu</div></div>${ICON.chev}</button>
+      <button class="row" data-act="navBackup"><div class="rc"><div class="t" style="font-weight:500">Backup</div><div class="s">Erstellen, importieren, Übersicht</div></div>${ICON.chev}</button>
     </div>
     <p class="hint">Deine Dokumente liegen nur auf diesem iPhone. Sichere das Backup ab und zu in „Dateien“ oder iCloud Drive, damit nichts verloren geht.</p>
 
@@ -1277,10 +1415,12 @@ const actions = {
   importPdf() { startSession({folderId: ''}); pdfIn.click(); },
   navHome() { if (cur().view !== 'home' || stack.length > 1) resetTo({view: 'home', params: {}}); },
   navDeadlines() { if (cur().view !== 'deadlines') go('deadlines'); },
+  navBackup() { if (cur().view !== 'backup') go('backup'); },
   focusSearch() { const q = $('#q'); if (q) { q.focus(); q.scrollIntoView({block: 'center', behavior: 'smooth'}); } },
   applyUpdate() { applyUpdate(); },
   checkUpdateNow() { checkUpdate(true); },
   onbNext() { go('onboarding', {step: 2}); },
+  setFolderView(t) { if (folderView() !== t.dataset.v) { lsSet('ablage.folderView', t.dataset.v); cur().scroll = scrollY; render(true); } },
   openProfile() { pfDraft = null; go('profile'); },
   pickAvatar() { avatarIn.click(); },
   removeAvatar() { pfDraft.photo = ''; render(true); },
@@ -1338,7 +1478,7 @@ const actions = {
       resetTo(...entries); toast('Abgelegt');
     } catch (e) { t.disabled = false; toast('Speichern fehlgeschlagen: ' + e.message); }
   },
-  async toggleDone(t) { const d = docById(t.dataset.id); d.done = !d.done; await dbPut('docs', d); render(true); },
+  async toggleDone(t) { const d = docById(t.dataset.id); d.done = !d.done; d.updated = Date.now(); await dbPut('docs', d); render(true); },
   async sharePdf(t) {
     const d = docById(t.dataset.id);
     try { const blob = await docPdf(d); await offerFile(new File([blob], pdfName(d), {type: 'application/pdf'}), 'PDF'); }
@@ -1399,6 +1539,9 @@ const actions = {
     const meta = {app: 'ablage', version: 1, created: new Date().toISOString(), folders: S.folders, docs: S.docs, blobs, profile: S.profile};
     files.unshift({name: 'ablage.json', data: new TextEncoder().encode(JSON.stringify(meta))});
     await offerFile(new File([makeZip(files)], `Ablage Backup ${localISO()}.zip`, {type: 'application/zip'}), 'Backup');
+    S.meta = {...(S.meta || {id: '__meta'}), lastBackup: Date.now(), lastBackupCount: S.docs.length};
+    await dbPut('blobs', S.meta);
+    if (['home', 'folder', 'deadlines', 'settings', 'backup'].includes(cur().view)) render(true);
   },
   restore() { backupIn.click(); },
 };
@@ -1473,16 +1616,19 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 
 // Live-Vorschau (nur am PC über tools/serve.ps1): lädt neu, sobald sich eine Datei ändert
 function devLiveReload() {
-  let last = null;
+  // Stand beim letzten Neuladen merken – so geht auch eine Änderung direkt nach dem Neuladen nicht verloren
+  let last = sessionStorage.getItem('ablage.dev.mtime');
   setInterval(async () => {
     try {
       const t = await (await fetch('/__mtime', {cache: 'no-store'})).text();
       if (last !== null && t !== last && !document.querySelector('.editor')) {
         sessionStorage.setItem('ablage.dev.stack', JSON.stringify(stack));
         sessionStorage.setItem('ablage.dev.scroll', String(scrollY));
+        sessionStorage.setItem('ablage.dev.mtime', t);
         location.reload();
+        return;
       }
-      last = t;
+      last = t; sessionStorage.setItem('ablage.dev.mtime', t);
     } catch {}
   }, 1000);
 }
